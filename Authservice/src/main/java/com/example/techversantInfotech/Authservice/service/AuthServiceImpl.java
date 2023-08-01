@@ -1,6 +1,8 @@
 package com.example.techversantInfotech.Authservice.service;
 
 import com.example.techversantInfotech.Authservice.Dto.*;
+import com.example.techversantInfotech.Authservice.Exception.UserAlreadyRegistered;
+import com.example.techversantInfotech.Authservice.Exception.UserNotFoundException;
 import com.example.techversantInfotech.Authservice.JWTutils.JwtService;
 import com.example.techversantInfotech.Authservice.config.CustomUserDetails;
 import com.example.techversantInfotech.Authservice.entity.User;
@@ -35,7 +37,7 @@ public class AuthServiceImpl implements AuthService{
     public String saveUser(UserDto userDto) {
         Optional<User> user=userCredential.findByUsername(userDto.getUsername());
         if(!user.isEmpty()){
-            throw new RuntimeException("User is already registered");
+            throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
         }
 
         try {
@@ -55,7 +57,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public AuthResponse login(AuthRequest authRequest){
-        Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword()));
+        Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(),authRequest.getPassword()));
 
         //Authentication authentication= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),userDto.getPassword()));
         if (authentication.isAuthenticated()){
@@ -81,7 +83,7 @@ public class AuthServiceImpl implements AuthService{
                     .build();
             return authResponse;
         }else{
-            throw new RuntimeException("User is not found");
+            throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
         }
 
 
