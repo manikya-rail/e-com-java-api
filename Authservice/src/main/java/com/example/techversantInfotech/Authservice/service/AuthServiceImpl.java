@@ -1,6 +1,7 @@
 package com.example.techversantInfotech.Authservice.service;
 
 import com.example.techversantInfotech.Authservice.Dto.*;
+import com.example.techversantInfotech.Authservice.Exception.ImageProcessingException;
 import com.example.techversantInfotech.Authservice.Exception.UserAlreadyRegistered;
 import com.example.techversantInfotech.Authservice.Exception.UserNotFoundException;
 import com.example.techversantInfotech.Authservice.JWTutils.JwtService;
@@ -14,7 +15,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -35,24 +39,28 @@ public class AuthServiceImpl implements AuthService{
     @Override
     //For adding new user
     public String saveUser(UserDto userDto) {
-        Optional<User> user=userCredential.findByUsername(userDto.getUsername());
+        Optional<User> user=userCredential.findByEmail(userDto.getEmail());
         if(!user.isEmpty()){
             throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
         }
+           User newUser=User.builder()
+                   .name(userDto.getName())
+                   .username(userDto.getUsername())
+                   .password(passwordEncoder.encode(userDto.getPassword()))
+                   .email(userDto.getEmail())
+                   .mobileNumber(userDto.getMobileNumber())
+                   .Description(userDto.getDescription())
+                   .active(true)
+                   .delete(false)
+                   .modifiedOn(null)
+                   .createOn(new Date())
+                   .role(UserRole.valueOf(userDto.getRole()))
+                   .build();
+           userCredential.save(newUser);
+           return "New super admin has added";
 
-        try {
-            User newUser=User.builder()
-                    .username(userDto.getUsername())
-                    .password(passwordEncoder.encode(userDto.getPassword()))
-                    .email(userDto.getEmail())
-                    .role(UserRole.valueOf(userDto.getRole()))
-                    .build();
-            userCredential.save(newUser);
-            return "New user has added";
 
-        } catch (Exception e){
-            throw  new RuntimeException("Something went wrong please check it later");
-        }
+
     }
 
     @Override
