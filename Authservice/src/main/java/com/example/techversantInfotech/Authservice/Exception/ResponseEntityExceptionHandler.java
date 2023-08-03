@@ -48,11 +48,20 @@ public class ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(ImageProcessingException.class)
     public ResponseEntity<ErrorResponse> handleIOException(ImageProcessingException ex) {
-        // Custom logic to handle the exception
         return new ResponseEntity<>(new ErrorResponse().builder()
                 .errorCode(ex.getErrorCode())
                 .errorMessage(ex.getMessage())
                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(CompletableFutureException.class)
+    public ResponseEntity<ErrorResponse> handleCompletableFuture(CompletableFutureException ex){
+        return new ResponseEntity<>(new ErrorResponse().builder()
+                .errorCode(ex.getErrorCode())
+                .errorMessage(ex.getMessage())
+                .build(), HttpStatus.BAD_REQUEST);
+
+    }
+
 
 }
