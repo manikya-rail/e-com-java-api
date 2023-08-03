@@ -11,6 +11,6 @@ import java.io.IOException;
 
 public interface AuthService {
 
-    public String saveUser(UserDto userDto);
+    public String saveUser(String userDto,MultipartFile file);
     public AuthResponse login(AuthRequest authRequest);
 }
