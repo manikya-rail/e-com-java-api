@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
@@ -105,11 +106,11 @@ public class AuthServiceImpl implements AuthService{
                     .username(userDetails.getUsername())
                     .email(userDetails.getEmail())
                     .role(String.valueOf(userDetails.getRole()))
-                    .image(imageByte)
                     .build();
 
             AuthResponse authResponse=AuthResponse.builder()
                     .userDetails(details)
+                    .image(imageByte)
                     .token(token)
                     .build();
             return authResponse;
