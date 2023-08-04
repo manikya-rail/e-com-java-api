@@ -91,7 +91,13 @@ public class AuthServiceImpl implements AuthService{
                     .role(userDetails.getRole())
                    .build();
             String token=jwtService.generateToken(jwtDto);
-            byte[] imageByte=ImageProcessingUtils.decompressImage(userDetails.getImage());
+            byte[] imageByte;
+
+            if(userDetails.getImage().length ==0) {
+                imageByte = ImageProcessingUtils.decompressImage(userDetails.getImage());
+            } else {
+              imageByte=null;
+            }
 
             UserDetails details=UserDetails.builder()
                     .name(userDetails.getName())
