@@ -11,6 +11,7 @@ import com.example.techversantInfotech.Authservice.enumDetails.UserRole;
 import com.example.techversantInfotech.Authservice.repository.UserCredential;
 import com.example.techversantInfotech.Authservice.utils.ImageProcessingUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,15 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     @Transactional
-    public String saveUser(String user,MultipartFile file){
+    public User saveUser(String user,MultipartFile file,String authorizationHeader){
+        String role = null;
+
+        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
+            Claims claims=jwtService.extractAllClaims(authorizationHeader);
+            role= (String) claims.get("role");
+         }
+
+
        UserDto userDto= ImageProcessingUtils.convertObject(user);
 
        Optional<User> admin=userCredential.findByEmail(userDto.getEmail());
@@ -51,12 +60,17 @@ public class AuthServiceImpl implements AuthService{
             throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
         }
 
-        byte[] image;
-        try {
-            image=ImageProcessingUtils.compressImageFuture(file.getBytes());
-        }  catch (IOException e){
-        throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
-    }
+
+        byte[] image=null;
+        if (!file.isEmpty()){
+            try {
+                image = ImageProcessingUtils.compressImageFuture(file.getBytes());
+            } catch (IOException e){
+                throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
+            }
+        }
+
+
 
             User newUser=User.builder()
                     .name(userDto.getName())
@@ -71,10 +85,14 @@ public class AuthServiceImpl implements AuthService{
                     .delete(false)
                     .modifiedOn(null)
                     .createOn(new Date())
-                    .role(UserRole.valueOf(userDto.getRole()))
                     .build();
-            userCredential.save(newUser);
-            return "New super admin has added";
+        newUser.setRole(UserRole.SUPER_ADMIN);
+
+        if(role!= null && role.equals(String.valueOf(UserRole.SUPER_ADMIN))){
+              newUser.setRole(UserRole.ADMIN);
+        }
+            return userCredential.save(newUser);
+
 
     }
 
@@ -91,12 +109,11 @@ public class AuthServiceImpl implements AuthService{
                     .role(userDetails.getRole())
                    .build();
             String token=jwtService.generateToken(jwtDto);
-            byte[] imageByte;
 
-            if(userDetails.getImage().length ==0) {
+            byte[] imageByte=null;
+
+            if(userDetails.getImage()!= null && userDetails.getImage().length!=0) {
                 imageByte = ImageProcessingUtils.decompressImage(userDetails.getImage());
-            } else {
-              imageByte=null;
             }
 
             UserDetails details=UserDetails.builder()
@@ -114,16 +131,15 @@ public class AuthServiceImpl implements AuthService{
                     .role(String.valueOf(userDetails.getRole()))
                     .build();
 
-            AuthResponse authResponse=AuthResponse.builder()
+
+           return AuthResponse.builder()
                     .userDetails(details)
                     .image(imageByte)
                     .token(token)
                     .build();
-            return authResponse;
         }else{
             throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
         }
-
 
     }
 }

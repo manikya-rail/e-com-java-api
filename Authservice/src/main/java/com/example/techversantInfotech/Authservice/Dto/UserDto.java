@@ -17,5 +17,6 @@ public class UserDto {
     private String Description;
     private String Password;
     private String location;
-    private String role;
+    @Builder.Default
+    private String role="";
 }
