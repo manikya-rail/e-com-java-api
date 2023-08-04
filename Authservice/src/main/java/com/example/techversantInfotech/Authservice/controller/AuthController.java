@@ -10,6 +10,7 @@ import com.example.techversantInfotech.Authservice.repository.UserCredential;
 import com.example.techversantInfotech.Authservice.service.AuthService;
 import com.example.techversantInfotech.Authservice.utils.ImageProcessingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
 
          AuthResponse authResponse=authService.login(authRequest);
-        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(authResponse);
+        return  ResponseEntity.status(HttpStatus.OK).body(authResponse);
 
     }
 //    @GetMapping("/photo")
@@ -55,6 +56,7 @@ public class AuthController {
 //        }
 //        byte[] image= ImageProcessingUtils.decompressImage(user.get().getImage());
 //        //byte[] image= user.get().getImage();
+//
 //        return  ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(image);
 //}
 
