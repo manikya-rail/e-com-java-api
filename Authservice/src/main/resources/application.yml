@@ -3,11 +3,7 @@ server:
 
 spring:
   datasource:
-<<<<<<< HEAD
     url: jdbc:postgresql://localhost:5432/e-commerce_db
-=======
-    url: jdbc:postgresql://localhost:5432/admin_db
->>>>>>> 9bf39969ed17497e7ad66bd8295cf16d64befd56
     username: postgres
     password: root
     driverClassName: org.postgresql.Driver
