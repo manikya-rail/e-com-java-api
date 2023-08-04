@@ -16,5 +16,6 @@ public class UserDto {
     private String mobileNumber;
     private String Description;
     private String Password;
+    private String location;
     private String role;
 }
