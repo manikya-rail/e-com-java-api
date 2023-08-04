@@ -39,6 +39,7 @@ public class User {
     private boolean delete;
     private Date modifiedOn;
     private Date createOn;
+    @JsonIgnore
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
