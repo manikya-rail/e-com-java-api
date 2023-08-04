@@ -33,6 +33,7 @@ public class User {
     @Lob
     @Column(length = 1000)
     private byte[] image;
+    private String location;
     private String Description;
     private boolean active;
     private boolean delete;

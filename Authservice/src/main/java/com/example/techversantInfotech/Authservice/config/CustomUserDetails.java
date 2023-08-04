@@ -11,6 +11,7 @@ import java.util.Date;
 public class CustomUserDetails implements UserDetails {
 
     private String name;
+    private String location;
     private String mobileNumber;
     private String description;
     private boolean active;
@@ -21,6 +22,14 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private int id;
     private String password;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     private byte[] image;
 
@@ -138,6 +147,7 @@ public class CustomUserDetails implements UserDetails {
         this.delete=user.isDelete();
         this.modifiedOn=user.getModifiedOn();
         this.createdOn=user.getCreateOn();
+        this.location=user.getLocation();
     }
 
     @Override

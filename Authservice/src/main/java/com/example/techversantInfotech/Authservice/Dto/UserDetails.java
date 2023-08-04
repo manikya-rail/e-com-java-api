@@ -22,6 +22,7 @@ public class UserDetails {
     private Date modifiedOn;
     private Date createdOn;
     private String username;
+    private String location;
     private String email;
     private String role;
 }
