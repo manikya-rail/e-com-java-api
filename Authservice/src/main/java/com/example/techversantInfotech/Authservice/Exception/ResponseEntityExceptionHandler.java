@@ -1,6 +1,7 @@
 package com.example.techversantInfotech.Authservice.Exception;
 
 import com.example.techversantInfotech.Authservice.Dto.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +48,12 @@ public class ResponseEntityExceptionHandler {
         }
         return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        Throwable rootCause = ex.getRootCause();
+        return new ResponseEntity(CustomConstraintException.customConstraintResponse(rootCause),HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(ImageProcessingException.class)
     public ResponseEntity<ErrorResponse> handleIOException(ImageProcessingException ex) {
         return new ResponseEntity<>(new ErrorResponse().builder()
