@@ -31,12 +31,15 @@ public class User {
     @NotBlank(message = "mobile number cannot be null")
     private String mobileNumber;
     @Lob
+    @Column(length = 1000)
     private byte[] image;
+    private String location;
     private String Description;
     private boolean active;
     private boolean delete;
     private Date modifiedOn;
     private Date createOn;
+    @JsonIgnore
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;

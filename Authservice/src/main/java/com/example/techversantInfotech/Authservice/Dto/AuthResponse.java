@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthResponse {
    UserDetails userDetails;
+   private byte[] image;
    private String token;
 }
