@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -176,5 +173,10 @@ public class AuthServiceImpl implements AuthService{
             throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
         }
         return user.get();
+    }
+
+    @Override
+    public List<User> getAllClients() {
+       return userCredential.findAll().stream().filter(user -> user.getRole()!=UserRole.SUPER_ADMIN).toList();
     }
 }

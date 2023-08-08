@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 //import javax.transaction.Transactional;
 //import javax.validation.Valid;
 //import java.io.IOException;
@@ -58,6 +60,13 @@ public class AuthController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable int id){
         User user=authService.getUserById(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<List<User>> getAllClients(@PathVariable int id){
+        List<User> user=authService.getAllClients();
         return new ResponseEntity<>(user,HttpStatus.OK);
 
     }
