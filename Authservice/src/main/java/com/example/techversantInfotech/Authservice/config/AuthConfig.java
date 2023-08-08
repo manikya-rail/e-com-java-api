@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +19,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class AuthConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .antMatchers("/api/auth/register","/api/auth/login","/api/auth/photo").permitAll() // Use antMatchers instead of requestMatchers
-                .anyRequest().authenticated()
-                .and()
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth-> auth
+                        .requestMatchers("/api/auth/register","/api/auth/login","/api/auth/client/register","/api/auth/{id}").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .build();
 
-
-
     }
+
+
 
     @Bean
     public UserDetailsService userDetailsService(){
