@@ -20,7 +20,7 @@ public class AuthConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/api/auth/register","/api/auth/login","/api/auth/photo").permitAll() // Use antMatchers instead of requestMatchers
+                .antMatchers("/api/auth/register","/api/auth/login","/api/auth/photo","/api/auth/{id}").permitAll() // Use antMatchers instead of requestMatchers
                 .anyRequest().authenticated()
                 .and()
                 .build();
