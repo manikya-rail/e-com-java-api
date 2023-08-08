@@ -142,4 +142,14 @@ public class AuthServiceImpl implements AuthService{
         }
 
     }
+
+    @Override
+    public User getUserById(int id) {
+        Optional<User> user=userCredential.findById(id);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
+        }
+        return user.get();
+
+    }
 }

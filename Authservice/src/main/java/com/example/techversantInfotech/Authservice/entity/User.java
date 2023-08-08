@@ -25,10 +25,13 @@ public class User {
     @NotNull(message = "Name cannot be null")
     private String name;
     @NotBlank(message = "username cannot be null")
+    @Column(unique = true)
     private String username;
     @Email(message = "Invalid email format")
+    @Column(unique = true)
     private String email;
     @NotBlank(message = "mobile number cannot be null")
+    @Column(unique = true)
     private String mobileNumber;
     @Lob
     @Column(length = 1000)

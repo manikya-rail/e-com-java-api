@@ -14,4 +14,6 @@ public interface AuthService {
 
     public User saveUser(String userDto, MultipartFile file, String authorizationHeader);
     public AuthResponse login(AuthRequest authRequest);
+
+    User getUserById(int id);
 }
