@@ -12,7 +12,9 @@ import java.io.IOException;
 
 public interface AuthService {
 
-    public User saveUser(String userDto, MultipartFile file, String authorizationHeader);
+    public User saveUser(String userDto, MultipartFile file);
+
+    public User clientRegister(String userDto,MultipartFile file);
     public AuthResponse login(AuthRequest authRequest);
 
     User getUserById(int id);
