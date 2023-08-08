@@ -3,13 +3,12 @@ package com.example.techversantInfotech.Authservice.config;
 import com.example.techversantInfotech.Authservice.Exception.UserNotFoundException;
 import com.example.techversantInfotech.Authservice.entity.User;
 import com.example.techversantInfotech.Authservice.repository.UserCredential;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Component
