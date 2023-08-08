@@ -19,10 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
+
+//import javax.transaction.Transactional;
+//import javax.validation.Valid;
+//import java.io.IOException;
+//import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -44,7 +46,7 @@ public class AuthController {
                                            @RequestPart("file") MultipartFile file,
                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
-       User user=authService.saveUser(userDto,file,authorizationHeader);
+       User user=authService.saveUser(userDto,file);
        return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
@@ -60,6 +62,21 @@ public class AuthController {
         User user=authService.getUserById(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
 
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<List<User>> getAllClients(@PathVariable int id){
+        List<User> user=authService.getAllClients();
+        return new ResponseEntity<>(user,HttpStatus.OK);
+
+    }
+    @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
+                                         @RequestPart("file") MultipartFile file,
+                                         @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
+
+        User user=authService.clientRegister(userDto,file);
+        return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
 

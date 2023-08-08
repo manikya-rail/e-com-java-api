@@ -12,6 +12,7 @@ import com.example.techversantInfotech.Authservice.repository.UserCredential;
 import com.example.techversantInfotech.Authservice.utils.ImageProcessingUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,12 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -44,14 +41,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     @Transactional
-    public User saveUser(String user,MultipartFile file,String authorizationHeader){
-        String role = null;
-
-        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
-            Claims claims=jwtService.extractAllClaims(authorizationHeader);
-            role= (String) claims.get("role");
-         }
-
+    public User saveUser(String user,MultipartFile file){
 
        UserDto userDto= ImageProcessingUtils.convertObject(user);
 
@@ -80,19 +70,53 @@ public class AuthServiceImpl implements AuthService{
                     .mobileNumber(userDto.getMobileNumber())
                     .Description(userDto.getDescription())
                     .location(userDto.getLocation())
+                    .role(UserRole.valueOf(userDto.getRole()))
                     .image(image)
                     .active(true)
                     .delete(false)
                     .modifiedOn(null)
                     .createOn(new Date())
                     .build();
-        newUser.setRole(UserRole.SUPER_ADMIN);
-
-        if(role!= null && role.equals(String.valueOf(UserRole.SUPER_ADMIN))){
-              newUser.setRole(UserRole.ADMIN);
-        }
             return userCredential.save(newUser);
 
+
+    }
+
+    @Override
+    @Transactional
+    public User clientRegister(String user, MultipartFile file) {
+        UserDto userDto= ImageProcessingUtils.convertObject(user);
+
+        Optional<User> admin=userCredential.findByEmail(userDto.getEmail());
+        if(admin.isPresent()){
+            throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
+        }
+
+        byte[] image=null;
+        if (!file.isEmpty()){
+            try {
+                image = ImageProcessingUtils.compressImageFuture(file.getBytes());
+            } catch (IOException e){
+                throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
+            }
+        }
+
+        User newUser=User.builder()
+                .name(userDto.getName())
+                .username(userDto.getUsername())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .email(userDto.getEmail())
+                .mobileNumber(userDto.getMobileNumber())
+                .Description(userDto.getDescription())
+                .location(userDto.getLocation())
+                .role(UserRole.ADMIN)
+                .image(image)
+                .active(true)
+                .delete(false)
+                .modifiedOn(null)
+                .createOn(new Date())
+                .build();
+        return userCredential.save(newUser);
 
     }
 
@@ -142,7 +166,6 @@ public class AuthServiceImpl implements AuthService{
         }
 
     }
-
     @Override
     public User getUserById(int id) {
         Optional<User> user=userCredential.findById(id);
@@ -150,6 +173,10 @@ public class AuthServiceImpl implements AuthService{
             throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
         }
         return user.get();
+    }
 
+    @Override
+    public List<User> getAllClients() {
+       return userCredential.findAll().stream().filter(user -> user.getRole()!=UserRole.SUPER_ADMIN).toList();
     }
 }
