@@ -19,11 +19,10 @@ public interface AuthService {
 
     public AuthResponse login(AuthRequest authRequest);
 
-<<<<<<< HEAD
-    public User getUserById(int id);
-=======
+   // public User getUserById(int id);
+
     User getUserById(int id);
 
     List<User> getAllClients();
->>>>>>> c02e04de2916fade2d8cd2232657541a24025a3b
+
 }
