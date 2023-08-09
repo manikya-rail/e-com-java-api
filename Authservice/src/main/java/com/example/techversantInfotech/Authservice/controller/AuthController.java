@@ -65,7 +65,7 @@ public class AuthController {
     }
 
     @GetMapping("/client")
-    public ResponseEntity<List<User>> getAllClients(@PathVariable int id){
+    public ResponseEntity<List<User>> getAllClients(){
         List<User> user=authService.getAllClients();
         return new ResponseEntity<>(user,HttpStatus.OK);
 
