@@ -179,4 +179,10 @@ public class AuthServiceImpl implements AuthService{
     public List<User> getAllClients() {
        return userCredential.findAll().stream().filter(user -> user.getRole()!=UserRole.SUPER_ADMIN).toList();
     }
+
+    @Override
+    public byte[] downloadImage(int id) {
+        User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
+        return ImageProcessingUtils.decompressImageFuture(user.getImage());
+    }
 }

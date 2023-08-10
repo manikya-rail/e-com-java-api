@@ -22,4 +22,6 @@ public interface AuthService {
     User getUserById(int id);
 
     List<User> getAllClients();
+
+    byte[] downloadImage(int id);
 }
