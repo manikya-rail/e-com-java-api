@@ -79,6 +79,14 @@ public class AuthController {
         return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
+    @GetMapping("/image/{id}")
+        public ResponseEntity<?> downloadImage(@PathVariable int id){
+            byte[] imageData=authService.downloadImage(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.valueOf("image/png"))
+                    .body(imageData);
 
+        }
+        
 
 }
