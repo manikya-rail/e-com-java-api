@@ -24,4 +24,8 @@ public interface AuthService {
     List<User> getAllClients();
 
     byte[] downloadImage(int id);
+
+    String deleteClient(int id);
+
+    String updateClient(String userDto, MultipartFile file,int id);
 }

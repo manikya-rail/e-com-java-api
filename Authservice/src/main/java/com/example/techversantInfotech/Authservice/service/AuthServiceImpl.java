@@ -177,12 +177,54 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public List<User> getAllClients() {
-       return userCredential.findAll().stream().filter(user -> user.getRole()!=UserRole.SUPER_ADMIN).toList();
+        List<User> users=userCredential.findAll();
+        if(users.isEmpty()){
+           throw new UserNotFoundException("USER_NOT_FOUND","Users is not available");
+        }
+       return users.stream().filter(user -> user.getRole()!=UserRole.SUPER_ADMIN).toList();
     }
 
     @Override
     public byte[] downloadImage(int id) {
         User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
         return ImageProcessingUtils.decompressImageFuture(user.getImage());
+    }
+
+    @Override
+    public String deleteClient(int id) {
+        if(userCredential.existsById(id)){
+            userCredential.deleteById(id);
+            return "Delete client successfully";
+        } else {
+            throw new UserNotFoundException("USER_NOT_FOUND","User is not found");
+        }
+    }
+
+    @Override
+    public String updateClient(String updateUser, MultipartFile file,int id) {
+
+        User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
+
+        UserDto userDto=ImageProcessingUtils.convertObject(updateUser);
+        user.setName(userDto.getName());
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setMobileNumber(userDto.getMobileNumber());
+        user.setDescription(userDto.getDescription());
+        user.setLocation(userDto.getLocation());
+
+        byte[] image=null;
+        if (!file.isEmpty()){
+            try {
+                image = ImageProcessingUtils.compressImageFuture(file.getBytes());
+            } catch (IOException e){
+                throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
+            }
+        }
+        user.setImage(image);
+
+        userCredential.save(user);
+        return"updated successfully";
+
     }
 }
