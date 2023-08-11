@@ -44,25 +44,9 @@ public class AuthServiceImpl implements AuthService{
     public User saveUser(String user,MultipartFile file){
 
        UserDto userDto= ImageProcessingUtils.convertObject(user);
-
-       Optional<User> admin=userCredential.findByEmail(userDto.getEmail());
-        if(admin.isPresent()){
-            throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
-        }
-
-
-        byte[] image=null;
-        if (!file.isEmpty()){
-            try {
-                image = ImageProcessingUtils.compressImageFuture(file.getBytes());
-            } catch (IOException e){
-                throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
-            }
-        }
-
-
-
-            User newUser=User.builder()
+       validateUserNotRegistered(userDto.getEmail());
+       byte[] image=imageProcess(file);
+          User newUser=User.builder()
                     .name(userDto.getName())
                     .username(userDto.getUsername())
                     .password(passwordEncoder.encode(userDto.getPassword()))
@@ -86,21 +70,8 @@ public class AuthServiceImpl implements AuthService{
     @Transactional
     public User clientRegister(String user, MultipartFile file) {
         UserDto userDto= ImageProcessingUtils.convertObject(user);
-
-        Optional<User> admin=userCredential.findByEmail(userDto.getEmail());
-        if(admin.isPresent()){
-            throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
-        }
-
-        byte[] image=null;
-        if (!file.isEmpty()){
-            try {
-                image = ImageProcessingUtils.compressImageFuture(file.getBytes());
-            } catch (IOException e){
-                throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
-            }
-        }
-
+        validateUserNotRegistered(userDto.getEmail());
+        byte[] image=imageProcess(file);
         User newUser=User.builder()
                 .name(userDto.getName())
                 .username(userDto.getUsername())
@@ -212,7 +183,24 @@ public class AuthServiceImpl implements AuthService{
         user.setMobileNumber(userDto.getMobileNumber());
         user.setDescription(userDto.getDescription());
         user.setLocation(userDto.getLocation());
+        user.setModifiedOn(new Date());
 
+        byte[] image=imageProcess(file);
+        user.setImage(image);
+
+        userCredential.save(user);
+        return"updated successfully";
+
+    }
+
+    private void validateUserNotRegistered(String email){
+        Optional<User> admin=userCredential.findByEmail(email);
+        if(admin.isPresent()){
+            throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
+        }
+    }
+
+    private byte[] imageProcess(MultipartFile  file){
         byte[] image=null;
         if (!file.isEmpty()){
             try {
@@ -221,10 +209,9 @@ public class AuthServiceImpl implements AuthService{
                 throw  new ImageProcessingException("IMAGE_NOT_PROCESS","Image is not uploaded successfully");
             }
         }
-        user.setImage(image);
-
-        userCredential.save(user);
-        return"updated successfully";
-
+        return image;
     }
+
+
+
 }
