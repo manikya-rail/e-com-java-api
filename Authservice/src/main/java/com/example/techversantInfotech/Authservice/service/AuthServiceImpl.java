@@ -202,7 +202,7 @@ public class AuthServiceImpl implements AuthService{
 
     private byte[] imageProcess(MultipartFile  file){
         byte[] image=null;
-        if (!file.isEmpty()){
+        if (file!=null && !file.isEmpty()){
             try {
                 image = ImageProcessingUtils.compressImageFuture(file.getBytes());
             } catch (IOException e){

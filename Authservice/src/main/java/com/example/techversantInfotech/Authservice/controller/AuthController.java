@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping(path = "/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<User> register(@RequestPart("user") String userDto,
-                                           @RequestPart("file") MultipartFile file,
+                                           @RequestPart(value = "file",required = false) MultipartFile file,
                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
        User user=authService.saveUser(userDto,file);
@@ -66,7 +66,7 @@ public class AuthController {
     }
     @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
-                                         @RequestPart("file") MultipartFile file,
+                                         @RequestPart(value = "file",required = false) MultipartFile file,
                                          @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
         User user=authService.clientRegister(userDto,file);
