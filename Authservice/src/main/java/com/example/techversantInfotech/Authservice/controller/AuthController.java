@@ -90,7 +90,7 @@ public class AuthController {
 
      @PatchMapping("/client/edit/{id}")
     public String updateClient(@PathVariable int id, @RequestPart("user") String userDto,
-                               @RequestPart("file") MultipartFile file){
+                               @RequestPart(value = "file",required = false) MultipartFile file){
          return authService.updateClient(userDto,file,id);
      }
 
