@@ -82,7 +82,7 @@ public class AuthController {
                     .body(imageData);
 
         }
-     @DeleteMapping("/client/{id}")
+     @DeleteMapping("/client/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable int id){
        String s= authService.deleteClient(id);
        return new ResponseEntity<>(s,HttpStatus.OK);
