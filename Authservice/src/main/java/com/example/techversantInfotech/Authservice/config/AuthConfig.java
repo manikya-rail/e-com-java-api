@@ -22,7 +22,7 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth-> auth
-                        .requestMatchers("/api/auth/register","/api/auth/login","/api/auth/client/register","/api/auth/{id}","/api/auth/client").permitAll()
+                        .requestMatchers("/api/auth/register","/api/auth/login","/api/auth/client/register","/api/auth/{id}","/api/auth/client","/api/auth/image/{id}","/api/auth/client/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
