@@ -1,6 +1,7 @@
 package com.example.techversantInfoTech.ecommercegateway.filter;
 
 import com.example.techversantInfoTech.ecommercegateway.Jwtutil.JwtService;
+import com.example.techversantInfoTech.ecommercegateway.UserRole;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -35,8 +36,9 @@ public class Authentication implements GatewayFilter {
           final String token=request.getHeaders().getOrEmpty("Authorization").get(0);
 
           Claims claims=jwtService.extractAllClaims(token);
-          System.out.println(38);
-          System.out.println(claims.get("role"));
+         if(!(claims.get("role").equals(String.valueOf(UserRole.SUPER_ADMIN)))){
+             return onError(exchange, HttpStatus.UNAUTHORIZED);
+         }
 
       }
         return chain.filter(exchange);
