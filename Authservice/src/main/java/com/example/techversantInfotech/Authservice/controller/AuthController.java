@@ -43,6 +43,14 @@ public class AuthController {
        User user=authService.saveUser(userDto,file);
        return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
+    @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
+                                               @RequestPart(value = "file",required = false) MultipartFile file,
+                                               @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
+
+        User user=authService.clientRegister(userDto,file);
+        return new ResponseEntity<>(user,HttpStatus.CREATED);
+    }
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
@@ -51,7 +59,7 @@ public class AuthController {
         return  ResponseEntity.status(HttpStatus.OK).body(authResponse);
 
     }
-    @GetMapping("/{id}")
+    @GetMapping("/client/{id}")
     public ResponseEntity<User> getById(@PathVariable int id){
         User user=authService.getUserById(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
@@ -64,14 +72,7 @@ public class AuthController {
         return new ResponseEntity<>(user,HttpStatus.OK);
 
     }
-    @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
-                                         @RequestPart(value = "file",required = false) MultipartFile file,
-                                         @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
-        User user=authService.clientRegister(userDto,file);
-        return new ResponseEntity<>(user,HttpStatus.CREATED);
-    }
 
     @GetMapping("/image/{id}")
         public ResponseEntity<?> downloadImage(@PathVariable int id){
@@ -81,15 +82,15 @@ public class AuthController {
                     .body(imageData);
 
         }
-     @DeleteMapping("/client/{id}")
+     @DeleteMapping("/client/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable int id){
        String s= authService.deleteClient(id);
        return new ResponseEntity<>(s,HttpStatus.OK);
      }
 
-     @PatchMapping("/client/{id}")
+     @PatchMapping("/client/edit/{id}")
     public String updateClient(@PathVariable int id, @RequestPart("user") String userDto,
-                               @RequestPart("file") MultipartFile file){
+                               @RequestPart(value = "file",required = false) MultipartFile file){
          return authService.updateClient(userDto,file,id);
      }
 
