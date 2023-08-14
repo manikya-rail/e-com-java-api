@@ -6,11 +6,40 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 public class CustomUserDetails implements UserDetails {
+
+    private String name;
+    private String location;
+    private String mobileNumber;
+    private String description;
+    private boolean active;
+    private boolean delete;
+    private Date modifiedOn;
+    private Date createdOn;
+
     private String username;
     private int id;
     private String password;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    private byte[] image;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public String getEmail() {
         return email;
@@ -48,12 +77,77 @@ public class CustomUserDetails implements UserDetails {
 
     private UserRole role;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
     public CustomUserDetails(User user) {
         this.username = user.getUsername();
         this.email=user.getEmail();
         this.id = user.getId();
         this.password = user.getPassword();
         this.role = user.getRole();
+        this.image= user.getImage();
+        this.name=user.getName();
+        this.mobileNumber= user.getMobileNumber();
+        this.description=user.getDescription();
+        this.active=user.isActive();
+        this.delete=user.isDelete();
+        this.modifiedOn=user.getModifiedOn();
+        this.createdOn=user.getCreateOn();
+        this.location=user.getLocation();
     }
 
     @Override
