@@ -88,7 +88,7 @@ public class AuthController {
        return new ResponseEntity<>(s,HttpStatus.OK);
      }
 
-     @PatchMapping("/client/{id}")
+     @PatchMapping("/client/edit/{id}")
     public String updateClient(@PathVariable int id, @RequestPart("user") String userDto,
                                @RequestPart("file") MultipartFile file){
          return authService.updateClient(userDto,file,id);
