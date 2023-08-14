@@ -11,7 +11,7 @@ server:
 #            - Path=/auth/**
 
 
-
+spring:
   application:
     name: ECOMMERCE-GATEWAY
 
