@@ -59,7 +59,7 @@ public class AuthController {
         return  ResponseEntity.status(HttpStatus.OK).body(authResponse);
 
     }
-    @GetMapping("/{id}")
+    @GetMapping("/client/{id}")
     public ResponseEntity<User> getById(@PathVariable int id){
         User user=authService.getUserById(id);
         return new ResponseEntity<>(user,HttpStatus.OK);
