@@ -21,11 +21,17 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder){
         return builder.routes()
-                .route("EDIT-SERVICE",r->r.path("/api/auth/client/edit/**")
-                        .uri("lb://AUTH-SERVICE"))
-                .route("CLIENT-SERVICE",r ->r.path("/api/auth/client/**")
+                .route("CLIENT-SERVICE",r ->r.path("/api/auth/client/register")
                         .filters(f->f.filter(filter))
                         .uri("lb://AUTH-SERVICE"))
+                .route("ALLCLIENTS-SERVICE",r ->r.path("/api/auth/client")
+                        .filters(f->f.filter(filter))
+                        .uri("lb://AUTH-SERVICE"))
+                .route("EDIT-SERVICE",r->r.path("/api/auth/client/edit/**")
+                        .uri("lb://AUTH-SERVICE"))
+                .route("USERBYID-SERVICE",r->r.path("/api/auth/client/**")
+                        .uri("lb://AUTH-SERVICE"))
+
                 .route("AUTH-SERVICE",r ->r.path("/api/auth/**")
                         .uri("lb://AUTH-SERVICE"))
 
