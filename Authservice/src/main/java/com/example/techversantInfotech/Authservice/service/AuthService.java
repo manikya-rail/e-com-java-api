@@ -22,4 +22,10 @@ public interface AuthService {
     User getUserById(int id);
 
     List<User> getAllClients();
+
+    byte[] downloadImage(int id);
+
+    String deleteClient(int id);
+
+    String updateClient(String userDto, MultipartFile file,int id);
 }

@@ -2,17 +2,11 @@ package com.example.techversantInfotech.Authservice.controller;
 
 import com.example.techversantInfotech.Authservice.Dto.AuthRequest;
 import com.example.techversantInfotech.Authservice.Dto.AuthResponse;
-import com.example.techversantInfotech.Authservice.Dto.UserDetails;
-import com.example.techversantInfotech.Authservice.Dto.UserDto;
-import com.example.techversantInfotech.Authservice.Exception.ImageProcessingException;
 import com.example.techversantInfotech.Authservice.JWTutils.JwtService;
 import com.example.techversantInfotech.Authservice.entity.User;
 import com.example.techversantInfotech.Authservice.repository.UserCredential;
 import com.example.techversantInfotech.Authservice.service.AuthService;
-import com.example.techversantInfotech.Authservice.utils.ImageProcessingUtils;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +37,7 @@ public class AuthController {
 
     @PostMapping(path = "/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<User> register(@RequestPart("user") String userDto,
-                                           @RequestPart("file") MultipartFile file,
+                                           @RequestPart(value = "file",required = false) MultipartFile file,
                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
        User user=authService.saveUser(userDto,file);
@@ -72,13 +66,31 @@ public class AuthController {
     }
     @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
-                                         @RequestPart("file") MultipartFile file,
+                                         @RequestPart(value = "file",required = false) MultipartFile file,
                                          @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
         User user=authService.clientRegister(userDto,file);
         return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
 
+    @GetMapping("/image/{id}")
+        public ResponseEntity<?> downloadImage(@PathVariable int id){
+            byte[] imageData=authService.downloadImage(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.valueOf("image/png"))
+                    .body(imageData);
 
+        }
+     @DeleteMapping("/client/{id}")
+    public ResponseEntity<String> delete(@PathVariable int id){
+       String s= authService.deleteClient(id);
+       return new ResponseEntity<>(s,HttpStatus.OK);
+     }
+
+     @PatchMapping("/client/{id}")
+    public String updateClient(@PathVariable int id, @RequestPart("user") String userDto,
+                               @RequestPart("file") MultipartFile file){
+         return authService.updateClient(userDto,file,id);
+     }
 
 }
