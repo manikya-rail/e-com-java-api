@@ -12,6 +12,19 @@ server:
 
 
 spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"  # Change this to your frontend's origin
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+            allowCredentials: true
   application:
     name: ECOMMERCE-GATEWAY
 
