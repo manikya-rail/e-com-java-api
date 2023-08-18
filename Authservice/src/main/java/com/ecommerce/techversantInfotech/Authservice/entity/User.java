@@ -37,14 +37,15 @@ public class User {
     @NotBlank(message = "mobile number cannot be null")
     @Column(unique = true)
     private String mobileNumber;
-    @Lob
-    @Column(length = 1000)
     private String image;
     private String location;
     private String Description;
     private boolean active;
+    @JsonIgnore
     private boolean delete;
+    @JsonIgnore
     private Date modifiedOn;
+    @JsonIgnore
     private Date createOn;
     @JsonIgnore
     private String password;
