@@ -12,6 +12,7 @@ import com.ecommerce.techversantInfotech.Authservice.repository.UserCredential;
 import com.ecommerce.techversantInfotech.Authservice.utils.ImageProcessingUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,9 @@ import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService{
+    @Value("${app.filename}")
+    private String filePath;
+
     @Autowired
    private UserCredential userCredential;
 
@@ -39,7 +43,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public User saveUser(String user, MultipartFile file){
         //final String filePath="/Users/jenobpj/Documents/Files/";
-        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images/";
+        //final String filePath="c:/Users/Nayana Jayaraj/Documents/Images/";
        UserDto userDto= ImageProcessingUtils.convertObject(user);
        validateUserNotRegistered(userDto.getEmail());
           User newUser=User.builder()
@@ -51,30 +55,20 @@ public class AuthServiceImpl implements AuthService{
                     .Description(userDto.getDescription())
                     .location(userDto.getLocation())
                     .role(UserRole.valueOf(userDto.getRole()))
-                    .image(filePath+file.getOriginalFilename())
                     .active(true)
                     .delete(false)
                     .modifiedOn(null)
                     .createOn(new Date())
                     .build();
-
-        try {
-            file.transferTo(new File(newUser.getImage()));
-        } catch (IOException e) {
-            throw new ImageProcessingException("NOT_PROCESSED", "Image is not processed successfully");
-        }
-        return userCredential.save(newUser);
-
-
+        return userCredential.save(saveImageProcessing(newUser,file));
     }
 
     @Override
     @Transactional
     public User clientRegister(String user, MultipartFile file) {
-        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
+        //final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
         UserDto userDto= ImageProcessingUtils.convertObject(user);
         validateUserNotRegistered(userDto.getEmail());
-        //byte[] image=imageProcess(file);
         User newUser=User.builder()
                 .name(userDto.getName())
                 .username(userDto.getUsername())
@@ -84,13 +78,12 @@ public class AuthServiceImpl implements AuthService{
                 .Description(userDto.getDescription())
                 .location(userDto.getLocation())
                 .role(UserRole.ADMIN)
-                .image(filePath+file.getName())
                 .active(true)
                 .delete(false)
                 .modifiedOn(null)
                 .createOn(new Date())
                 .build();
-        return userCredential.save(newUser);
+        return userCredential.save(saveImageProcessing(newUser,file));
 
     }
 
@@ -155,6 +148,9 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public InputStream downloadImage(int id) throws FileNotFoundException {
         User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
+        if(user.getImage() ==null){
+            return null;
+        }
 
         return new FileInputStream(user.getImage());
     }
@@ -171,7 +167,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String updateClient(String updateUser, MultipartFile file,int id) {
-        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
+        //final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
         User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
 
         UserDto userDto=ImageProcessingUtils.convertObject(updateUser);
@@ -183,10 +179,7 @@ public class AuthServiceImpl implements AuthService{
         user.setLocation(userDto.getLocation());
         user.setModifiedOn(new Date());
 
-        //byte[] image=imageProcess(file);
-        user.setImage(filePath+file.getName());
-
-        userCredential.save(user);
+        userCredential.save(saveImageProcessing(user,file));
         return"updated successfully";
 
     }
@@ -194,10 +187,22 @@ public class AuthServiceImpl implements AuthService{
     private void validateUserNotRegistered(String email){
         Optional<User> admin=userCredential.findByEmail(email);
         if(admin.isPresent()){
+            System.out.println(admin.get());
             throw new UserAlreadyRegistered("User is already registered","USER_REGISTERED" );
         }
     }
 
+    private User saveImageProcessing(User user,MultipartFile file){
+        if(file!=null && !file.isEmpty()){
+            user.setImage(filePath+file.getOriginalFilename());
+            try {
+                file.transferTo(new File(user.getImage()));
+            } catch (IOException e) {
+                throw new ImageProcessingException("NOT_PROCESSED", "Image is not processed successfully");
+            }
+        }
+        return user;
+    }
 
 
 

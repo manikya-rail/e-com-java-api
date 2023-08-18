@@ -78,6 +78,11 @@ public class AuthController {
     @GetMapping(value="/image/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
         public void downloadImage(@PathVariable int id, HttpServletResponse response) throws IOException {
             InputStream imageData=authService.downloadImage(id);
+
+            if(imageData == null){
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return;
+            }
            response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(imageData,response.getOutputStream());
 
