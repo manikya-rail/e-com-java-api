@@ -12,8 +12,18 @@ server:
 
 
 spring:
-  application:
-    name: ECOMMERCE-GATEWAY
+    cloud:
+      gateway:
+        globalcors:
+          cors-configurations:
+            '[/**]':
+              allowedOrigins: "http://localhost:3000/"
+              allowedMethods:
+                - GET
+                - PUT
+                - POST
+    application:
+      name: ECOMMERCE-GATEWAY
 
 jwt:
   secret: 5367566B59703373357638792F423F4528482B4D6251655468576D5A71347437
