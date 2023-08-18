@@ -38,7 +38,8 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public User saveUser(String user, MultipartFile file){
-        final String filePath="/Users/jenobpj/Documents/Files/";
+        //final String filePath="/Users/jenobpj/Documents/Files/";
+        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images/";
        UserDto userDto= ImageProcessingUtils.convertObject(user);
        validateUserNotRegistered(userDto.getEmail());
           User newUser=User.builder()
@@ -70,7 +71,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     @Transactional
     public User clientRegister(String user, MultipartFile file) {
-        final String filePath="/Users/jenobpj/Documents/images";
+        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
         UserDto userDto= ImageProcessingUtils.convertObject(user);
         validateUserNotRegistered(userDto.getEmail());
         //byte[] image=imageProcess(file);
@@ -170,7 +171,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String updateClient(String updateUser, MultipartFile file,int id) {
-        final String filePath="/Users/jenobpj/Documents/images";
+        final String filePath="c:/Users/Nayana Jayaraj/Documents/Images";
         User user=userCredential.findById(id).orElseThrow(()->new UserNotFoundException("USER_NOT_FOUND","User is not found"));
 
         UserDto userDto=ImageProcessingUtils.convertObject(updateUser);
