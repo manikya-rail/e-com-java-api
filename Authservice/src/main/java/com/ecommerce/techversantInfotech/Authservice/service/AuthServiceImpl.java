@@ -184,7 +184,7 @@ public class AuthServiceImpl implements AuthService{
 
     }
 
-    private void validateUserNotRegistered(String email){
+    public void validateUserNotRegistered(String email){
         Optional<User> admin=userCredential.findByEmail(email);
         if(admin.isPresent()){
             System.out.println(admin.get());
