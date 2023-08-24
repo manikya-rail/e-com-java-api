@@ -3,14 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/admin_db
+    url: jdbc:postgresql://localhost:5432/e-commerce_db
     username: postgres
-    password: postgres
+    password: root
     driverClassName: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
   application:
     name: AUTH-SERVICE
 
@@ -18,8 +18,8 @@ jwt:
   secret: 5367566B59703373357638792F423F4528482B4D6251655468576D5A71347437
 
 app:
-  filename: "/Users/jenobpj/Documents/Files/"
-
+  #filename: "/Users/jenobpj/Documents/Files/"
+  filename: "c:/Users/Nayana Jayaraj/Documents/Images/"
 
 eureka:
   client:

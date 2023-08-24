@@ -19,6 +19,8 @@ public interface AuthService {
 
     public AuthResponse login(AuthRequest authRequest);
 
+   // public User getUserById(int id);
+
     User getUserById(int id);
 
     List<User> getAllClients();
@@ -28,4 +30,5 @@ public interface AuthService {
     String deleteClient(int id);
 
     String updateClient(String userDto, MultipartFile file,int id);
+
 }

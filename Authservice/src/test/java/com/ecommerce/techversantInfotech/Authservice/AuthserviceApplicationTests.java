@@ -1,4 +1,4 @@
-package com.example.techversantInfotech.Authservice;
+package com.ecommerce.techversantInfotech.Authservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
