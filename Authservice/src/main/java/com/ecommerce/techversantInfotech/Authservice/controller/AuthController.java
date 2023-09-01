@@ -6,6 +6,7 @@ import com.ecommerce.techversantInfotech.Authservice.JWTutils.JwtService;
 import com.ecommerce.techversantInfotech.Authservice.entity.User;
 import com.ecommerce.techversantInfotech.Authservice.repository.UserCredential;
 import com.ecommerce.techversantInfotech.Authservice.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -98,5 +99,17 @@ public class AuthController {
                                @RequestPart(value = "file",required = false) MultipartFile file){
          return authService.updateClient(userDto,file,id);
      }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        // Extract the JWT token from the request headers
+        final String token = request.getHeader("Authorization").substring(7);
+
+        if(authService.logout(token)){
+            return new ResponseEntity<>("Logout successful",HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Please login",HttpStatus.FORBIDDEN);
+        }
+    }
 
 }
