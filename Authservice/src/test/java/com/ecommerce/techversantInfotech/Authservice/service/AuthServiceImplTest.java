@@ -1,9 +1,4 @@
 package com.ecommerce.techversantInfotech.Authservice.service;
-
-import com.ecommerce.techversantInfotech.Authservice.Dto.AuthRequest;
-import com.ecommerce.techversantInfotech.Authservice.Dto.AuthResponse;
-import com.ecommerce.techversantInfotech.Authservice.Dto.JwtDto;
-import com.ecommerce.techversantInfotech.Authservice.Dto.UserDetails;
 import com.ecommerce.techversantInfotech.Authservice.Dto.UserDto;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserAlreadyRegistered;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserNotFoundException;
@@ -121,11 +116,11 @@ class AuthServiceImplTest {
 		filePath = "c:/Users/Nayana Jayaraj/Documents/Images/"; // Replace with the actual path
 	}
 
+	@Test
 	void negative_registerTest() {
 		try (MockedStatic<ImageProcessingUtils> mockedStatic = Mockito.mockStatic(ImageProcessingUtils.class)) {
 			mockedStatic.when(() -> ImageProcessingUtils.convertObject(userJsonStringSuper))
 					.thenReturn(commonUserDtoSuper);
-
 			when(userCredential.findByEmail(commonUserDtoSuper.getEmail())).thenReturn(Optional.of(commonNewUserSuper));
 			Assertions.assertThrows(UserAlreadyRegistered.class,
 					() -> authService.saveUser(userJsonStringSuper, testImageFile));
@@ -151,7 +146,7 @@ class AuthServiceImplTest {
 
 			when(userCredential.findByEmail(commonUserDto.getEmail())).thenReturn(Optional.of(commonNewUser));
 			Assertions.assertThrows(UserAlreadyRegistered.class,
-					() -> authService.saveUser(userJsonString, testImageFile));
+					() -> authService.clientRegister(userJsonString, testImageFile));
 		}
 	}
 
@@ -161,7 +156,7 @@ class AuthServiceImplTest {
 			mockedStatic.when(() -> ImageProcessingUtils.convertObject(userJsonString)).thenReturn(commonUserDto);
 
 			when(userCredential.findByEmail(commonUserDto.getEmail())).thenReturn(Optional.empty());
-			authService.saveUser(userJsonString, testImageFile);
+			authService.clientRegister(userJsonString, testImageFile);
 			verify(userCredential).save(any(User.class));
 		}
 	}
