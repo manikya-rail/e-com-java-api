@@ -64,6 +64,14 @@ public class ResponseEntityExceptionHandler {
                 .build(), HttpStatus.BAD_REQUEST);
 
     }
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ErrorResponse> handleCompletableFuture(TokenException ex){
+        return new ResponseEntity<>(new ErrorResponse().builder()
+                .errorCode(ex.getErrorCode())
+                .errorMessage(ex.getMessage())
+                .build(), HttpStatus.FORBIDDEN);
+    }
+
 
 
 }

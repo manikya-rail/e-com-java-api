@@ -31,4 +31,6 @@ public interface AuthService {
 
     String updateClient(String userDto, MultipartFile file,int id);
 
+    Boolean logout(String token);
+
 }
