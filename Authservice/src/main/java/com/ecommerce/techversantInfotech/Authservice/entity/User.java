@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 //import javax.persistence.*;
 //import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -51,5 +52,8 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @JsonIgnore
+   @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
 }
