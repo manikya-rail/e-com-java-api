@@ -1,0 +1,28 @@
+#
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:h2:mem:e-commerce_db
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+   console:
+    enabled: true
+
+jwt:
+  secret: 5367566B59703373357638792F423F4528482B4D6251655468576D5A71347437
+
+app:
+ filename: "c:/Users/Nayana Jayaraj/Documents/Images/"
+#
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
