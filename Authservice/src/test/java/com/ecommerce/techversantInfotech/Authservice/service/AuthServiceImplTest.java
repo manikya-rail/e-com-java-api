@@ -1,9 +1,4 @@
 package com.ecommerce.techversantInfotech.Authservice.service;
-
-import com.ecommerce.techversantInfotech.Authservice.Dto.AuthRequest;
-import com.ecommerce.techversantInfotech.Authservice.Dto.AuthResponse;
-import com.ecommerce.techversantInfotech.Authservice.Dto.JwtDto;
-import com.ecommerce.techversantInfotech.Authservice.Dto.UserDetails;
 import com.ecommerce.techversantInfotech.Authservice.Dto.UserDto;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserAlreadyRegistered;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserNotFoundException;
