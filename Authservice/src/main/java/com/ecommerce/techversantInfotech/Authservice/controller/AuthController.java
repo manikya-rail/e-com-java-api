@@ -45,7 +45,7 @@ public class AuthController {
        return new ResponseEntity<>(user,HttpStatus.CREATED);
     }
     @PostMapping(path = "/client/register",consumes ={ MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<User> clientRegister(@RequestPart("user") String userDto,
+    public ResponseEntity<User> clientRegister(@RequestParam("user") String userDto,
                                                @RequestPart(value = "file",required = false) MultipartFile file,
                                                @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
