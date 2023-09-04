@@ -2,12 +2,15 @@ package com.ecommerce.techversantInfotech.Authservice.service;
 
 import com.ecommerce.techversantInfotech.Authservice.Dto.*;
 import com.ecommerce.techversantInfotech.Authservice.Exception.ImageProcessingException;
+import com.ecommerce.techversantInfotech.Authservice.Exception.TokenException;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserAlreadyRegistered;
 import com.ecommerce.techversantInfotech.Authservice.Exception.UserNotFoundException;
 import com.ecommerce.techversantInfotech.Authservice.JWTutils.JwtService;
 import com.ecommerce.techversantInfotech.Authservice.config.CustomUserDetails;
+import com.ecommerce.techversantInfotech.Authservice.entity.Token;
 import com.ecommerce.techversantInfotech.Authservice.entity.User;
 import com.ecommerce.techversantInfotech.Authservice.enumDetails.UserRole;
+import com.ecommerce.techversantInfotech.Authservice.repository.TokenRepo;
 import com.ecommerce.techversantInfotech.Authservice.repository.UserCredential;
 import com.ecommerce.techversantInfotech.Authservice.utils.ImageProcessingUtils;
 import jakarta.transaction.Transactional;
@@ -39,10 +42,12 @@ public class AuthServiceImpl implements AuthService{
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenRepo tokenRepo;
+
 
     @Override
     public User saveUser(String user, MultipartFile file){
-
        UserDto userDto= ImageProcessingUtils.convertObject(user);
        validateUserNotRegistered(userDto.getEmail());
           User newUser=User.builder()
@@ -114,7 +119,13 @@ public class AuthServiceImpl implements AuthService{
                     .role(String.valueOf(userDetails.getRole()))
                     .build();
 
-
+            Token jwtToken=Token.builder()
+                    .token(token)
+                    .expired(false)
+                    .revoked(false)
+                    .build();
+            Token token1=tokenRepo.save(jwtToken);
+            System.out.println(token1);
            return AuthResponse.builder()
                     .userDetails(details)
                     .image(userDetails.getImage())
@@ -181,7 +192,20 @@ public class AuthServiceImpl implements AuthService{
 
     }
 
-    private void validateUserNotRegistered(String email){
+    @Override
+    public Boolean logout(String token) {
+        if(token!=null && !token.isEmpty()){
+            Token jwtToken=tokenRepo.findByToken(token).orElseThrow(()->new TokenException("TOKEN_NOT_FOUND","User is not allowed"));
+            jwtToken.setExpired(true);
+            jwtToken.setRevoked(true);
+            tokenRepo.save(jwtToken);
+            return true;
+        }
+     return false;
+
+    }
+
+    public void validateUserNotRegistered(String email){
         Optional<User> admin=userCredential.findByEmail(email);
         if(admin.isPresent()){
             System.out.println(admin.get());

@@ -1,4 +1,4 @@
-package com.ecommerce.techversantInfotech.Authservice.entity;
+package com.ecommerce.techversantInfotech.Authservice.Entity;
 
 import com.ecommerce.techversantInfotech.Authservice.enumDetails.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,10 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//import javax.persistence.*;
-//import javax.validation.constraints.*;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Builder
@@ -22,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "admin_details")
-public class User {
+public class Test_User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,8 +49,5 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @JsonIgnore
-   @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
 
 }
